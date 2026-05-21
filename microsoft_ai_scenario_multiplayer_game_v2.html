@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Microsoft AI Scenario Challenge | Workshop Edition</title>
+  <style>
+    :root {
+      --ms-blue: #0078d4;
+      --ms-blue-dark: #005a9e;
+      --ms-blue-light: #e6f2fb;
+      --ms-teal: #00bcf2;
+      --ms-green: #107c10;
+      --ms-red: #d13438;
+      --ms-ink: #242424;
+      --ms-text: #323130;
+      --ms-subtle: #605e5c;
+      --ms-line: #edebe9;
+      --ms-bg: #f5f5f5;
+      --ms-card: #ffffff;
+      --ms-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      --ms-hero: linear-gradient(135deg, #0f6cbd 0%, #0078d4 42%, #00bcf2 100%);
+    }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family:"Segoe UI", SegoeUI, Arial, sans-serif; background:linear-gradient(180deg, #f7fbff 0%, #f3f2f1 100%); color:var(--ms-text); }
+    .topbar {
+      background:#ffffff; border-bottom:1px solid #edebe9; position:sticky; top:0; z-index:20;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+    }
+    .topbar-inner { max-width: 1320px; margin:0 auto; padding: 12px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+    .brand { display:flex; align-items:center; gap:14px; }
+    .ms-logo { width:24px; height:24px; display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:3px; }
+    .ms-logo span:nth-child(1){background:#f25022;} .ms-logo span:nth-child(2){background:#7fba00;} .ms-logo span:nth-child(3){background:#00a4ef;} .ms-logo span:nth-child(4){background:#ffb900;} .ms-logo span{border-radius:2px;}
+    .brand-text { display:flex; flex-direction:column; }
+    .brand-title { font-size:15px; font-weight:700; color:#242424; }
+    .brand-subtitle { font-size:12px; color:#605e5c; }
+    .top-actions { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .shell { max-width:1320px; margin:0 auto; padding:24px; }
+    .hero { background:var(--ms-hero); color:#fff; border-radius:24px; overflow:hidden; box-shadow: var(--ms-shadow); }
+    .hero-grid { display:grid; grid-template-columns:1.1fr 0.9fr; gap:22px; padding:28px; align-items:stretch; }
+    .hero h1 { font-size:40px; line-height:1.05; margin:0 0 14px; color:#fff; }
+    .hero p { margin:0; line-height:1.6; color:rgba(255,255,255,0.92); }
+    .hero-card { background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.18); border-radius:18px; padding:20px; backdrop-filter: blur(6px); }
+    .hero-mini-title { font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.86); margin-bottom:8px; font-weight:700; }
+    .pill-row { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+    .pill { background:rgba(255,255,255,0.15); color:#fff; border:1px solid rgba(255,255,255,0.18); padding:8px 12px; border-radius:999px; font-size:13px; font-weight:600; }
+    .panel { background:#fff; border:1px solid var(--ms-line); border-radius:20px; box-shadow: var(--ms-shadow); overflow:hidden; }
+    .panel-header { padding:16px 20px; border-bottom:1px solid var(--ms-line); background:#faf9f8; display:flex; justify-content:space-between; align-items:center; gap:10px; }
+    .panel-body { padding:20px; }
+    .section-title { margin:0; font-size:18px; font-weight:700; color:var(--ms-ink); }
+    .small { font-size:12px; color:var(--ms-subtle); }
+    .controls { display:flex; gap:10px; flex-wrap:wrap; }
+    button { appearance:none; border:none; border-radius:10px; padding:11px 16px; font-weight:600; cursor:pointer; transition:.2s ease; font-family:inherit; }
+    button:hover { transform:translateY(-1px); }
+    button.primary { background:var(--ms-blue); color:#fff; }
+    button.primary:hover { background:#106ebe; }
+    button.secondary { background:#eff6fc; color:var(--ms-blue-dark); border:1px solid rgba(0,120,212,0.14); }
+    button.ghost { background:#fff; color:var(--ms-text); border:1px solid var(--ms-line); }
+    button.success { background:var(--ms-green); color:#fff; }
+    button:disabled { opacity:.55; cursor:not-allowed; transform:none; }
+    .link-chip { padding:8px 12px; border-radius:999px; border:1px solid #d2d0ce; background:#fff; color:#323130; font-size:12px; }
+    .hidden { display:none !important; }
+    .intro-slide { margin-top:24px; background:#fff; border-radius:24px; border:1px solid var(--ms-line); box-shadow: var(--ms-shadow); overflow:hidden; }
+    .intro-split { display:grid; grid-template-columns:1.08fr 0.92fr; }
+    .intro-left { padding:30px; background:linear-gradient(180deg,#fff 0%,#f8fbfe 100%); }
+    .intro-right { padding:30px; background:#eef6fc; border-left:1px solid rgba(0,120,212,0.12); }
+    .eyebrow { color:var(--ms-blue-dark); font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; margin-bottom:10px; }
+    .intro-title { font-size:36px; line-height:1.1; margin:0 0 12px; color:var(--ms-ink); }
+    .intro-copy { color:var(--ms-subtle); font-size:16px; line-height:1.65; margin-bottom:18px; }
+    .bullet-grid { display:grid; gap:10px; }
+    .bullet { display:flex; gap:12px; padding:12px 14px; border:1px solid rgba(0,120,212,0.10); border-radius:14px; background:#fff; }
+    .bullet-icon { width:28px; height:28px; border-radius:50%; background:#e6f2fb; color:#005a9e; display:inline-flex; align-items:center; justify-content:center; font-weight:800; flex-shrink:0; }
+    .agenda { display:grid; gap:12px; }
+    .agenda-item { background:#fff; border:1px solid rgba(0,120,212,0.12); border-radius:14px; padding:14px; }
+    .agenda-item-title { font-weight:700; color:var(--ms-ink); margin-bottom:4px; }
+    .two-col, .stage { display:grid; gap:24px; margin-top:24px; }
+    .two-col { grid-template-columns:1.08fr 0.92fr; align-items:start; }
+    .stage { grid-template-columns:1.15fr 0.85fr; }
+    .join-grid { display:grid; grid-template-columns:200px 1fr; gap:20px; align-items:start; }
+    #qrcode { width:180px; height:180px; display:flex; align-items:center; justify-content:center; border:1px solid var(--ms-line); border-radius:12px; background:#fff; padding:8px; margin:0 auto; }
+    .session-box { display:grid; gap:12px; }
+    .session-card { background:#f8fbfe; border:1px solid rgba(0,120,212,0.12); border-radius:16px; padding:14px; }
+    .session-id { font-size:28px; color:var(--ms-blue); font-weight:700; letter-spacing:1px; margin-top:4px; word-break:break-all; }
+    .status-dot { width:10px; height:10px; border-radius:50%; display:inline-block; background:#ccc; margin-right:8px; }
+    .status-dot.live { background:var(--ms-green); } .status-dot.warn { background:#ffaa44; }
+    input { font:inherit; padding:12px 14px; border-radius:10px; border:1px solid #c8c6c4; width:100%; outline:none; }
+    input:focus { border-color:var(--ms-blue); box-shadow:0 0 0 2px rgba(0,120,212,0.15); }
+    .inline-form { display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; }
+    .mode-badges { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+    .badge { padding:6px 10px; background:#eef6fc; color:var(--ms-blue-dark); border-radius:999px; font-size:12px; font-weight:700; border:1px solid rgba(0,120,212,0.12); }
+    .question-meta { display:grid; grid-template-columns:auto auto 1fr; gap:12px; align-items:center; margin-bottom:18px; }
+    .counter, .timer-pill { font-size:13px; font-weight:700; padding:8px 12px; border-radius:999px; background:#f3f2f1; color:#323130; border:1px solid var(--ms-line); width:fit-content; }
+    .timer-bar { width:100%; height:10px; background:#edebe9; border-radius:999px; overflow:hidden; margin:12px 0 18px; }
+    .timer-fill { height:100%; width:100%; background:linear-gradient(90deg, var(--ms-blue) 0%, var(--ms-teal) 100%); transition:width 1s linear; }
+    .workshop-prompt { background:#f8fbfe; border-left:4px solid var(--ms-blue); padding:14px 16px; border-radius:12px; color:var(--ms-subtle); margin-bottom:18px; }
+    .prompt { font-size:28px; line-height:1.25; font-weight:700; color:var(--ms-ink); margin:18px 0 14px; }
+    .options-row { display:flex; gap:12px; flex-wrap:wrap; align-items:stretch; justify-content:flex-start; margin:20px 0; }
+    .option-btn { flex:1 1 220px; min-width:180px; min-height:86px; background:#fff; color:#323130; border:1px solid rgba(0,120,212,0.18); border-radius:16px; box-shadow:0 8px 18px rgba(0,0,0,0.05); text-align:left; padding:16px; display:flex; gap:12px; align-items:flex-start; }
+    .option-btn .letter { width:34px; height:34px; border-radius:50%; background:#eef6fc; color:#005a9e; display:inline-flex; align-items:center; justify-content:center; font-weight:700; flex-shrink:0; }
+    .option-btn:hover { border-color:var(--ms-blue); }
+    .option-btn.correct { border:2px solid var(--ms-green); background:#eef8ee; }
+    .option-btn.wrong { border:2px solid var(--ms-red); background:#fff1f1; }
+    .option-btn.selected { border:2px solid var(--ms-blue); background:#eef6fc; }
+    .answer-panel { background:#f8fbfe; border:1px solid rgba(0,120,212,0.14); padding:16px; border-radius:16px; margin-top:12px; }
+    .answer-title { color:var(--ms-blue-dark); font-weight:700; margin-bottom:8px; }
+    .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .table { width:100%; border-collapse:collapse; font-size:14px; }
+    .table th,.table td { padding:12px 10px; border-bottom:1px solid var(--ms-line); text-align:left; }
+    .table th { font-size:12px; text-transform:uppercase; letter-spacing:.04em; color:var(--ms-subtle); background:#faf9f8; position:sticky; top:0; }
+    .rank { font-weight:700; color:var(--ms-blue-dark); }
+    .score-chip { padding:5px 10px; border-radius:999px; background:#eef6fc; color:var(--ms-blue-dark); font-weight:700; display:inline-block; }
+    .notice { background:#fff4ce; color:#605e5c; border:1px solid #fce100; border-radius:14px; padding:12px 14px; font-size:13px; margin-top:14px; }
+    .footer-note { color:var(--ms-subtle); font-size:12px; margin-top:16px; }
+    .player-view { max-width:900px; margin:24px auto 0; }
+    .join-card { max-width:700px; margin:24px auto; }
+    @media (max-width:1080px){ .hero-grid,.intro-split,.two-col,.stage,.grid-2{grid-template-columns:1fr;} .join-grid{grid-template-columns:1fr;} .prompt{font-size:24px;} }
+    @media (max-width:640px){ .topbar-inner,.shell{padding:14px;} .hero h1,.intro-title{font-size:28px;} .prompt{font-size:20px;} .option-btn{flex:1 1 100%;} .question-meta{grid-template-columns:1fr;} }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="ms-logo" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+        <div class="brand-text">
+          <div class="brand-title">Microsoft AI Scenario Challenge</div>
+          <div class="brand-subtitle">Workshop Edition • Flashcard game for customer conversations</div>
+        </div>
+      </div>
+      <div class="top-actions">
+        <span class="link-chip">Microsoft-theme v2</span>
+        <span class="link-chip">Rapid Fire • Workshop • Trap Mode</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="shell" id="app">
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="hero-mini-title">Customer workshop game</div>
+          <h1>Turn solutioning into a fast, interactive Microsoft-style workshop</h1>
+          <p>Blend rapid-fire decision making, customer discovery, and trap-mode distractors into one experience. Participants join from a phone, answer each scenario, and appear on a live leaderboard.</p>
+          <div class="pill-row">
+            <div class="pill">Microsoft 365 Copilot</div>
+            <div class="pill">Copilot Studio</div>
+            <div class="pill">Azure OpenAI</div>
+            <div class="pill">Azure Machine Learning</div>
+            <div class="pill">Microsoft Fabric</div>
+          </div>
+        </div>
+        <div class="hero-card">
+          <div class="hero-mini-title">Facilitator setup</div>
+          <div style="font-size:18px;font-weight:700;margin-bottom:8px;">One file • Two roles</div>
+          <p style="margin-bottom:16px;">Use <strong>Host mode</strong> to run the room and display the QR code. Use <strong>Join mode</strong> on phones so attendees can enter a username and answer live.</p>
+          <div class="controls">
+            <button class="primary" id="chooseHostBtn">Start host mode</button>
+            <button class="secondary" id="chooseJoinBtn">Join from mobile</button>
+          </div>
+          <div class="footer-note" style="color:rgba(255,255,255,.9);">Tip: host the HTML on a reachable internal web location so the QR link works on phones.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="intro-slide" id="introSlide">
+      <div class="intro-split">
+        <div class="intro-left">
+          <div class="eyebrow">Workshop introduction slide</div>
+          <h2 class="intro-title">Welcome to the Microsoft AI Decision Workshop</h2>
+          <div class="intro-copy">This workshop helps customers quickly distinguish between productivity copilots, low-code agents, custom AI app development, machine learning platforms, and analytics solutions. Each card presents a scenario, attendees answer from their phones, and the room discusses the recommended fit.</div>
+          <div class="bullet-grid">
+            <div class="bullet"><div class="bullet-icon">1</div><div><strong>Rapid Fire:</strong> 30 seconds per scenario to keep energy high and test baseline product understanding.</div></div>
+            <div class="bullet"><div class="bullet-icon">2</div><div><strong>Customer Workshop:</strong> use each answer reveal to ask why the scenario matters and what business outcome the customer wants.</div></div>
+            <div class="bullet"><div class="bullet-icon">3</div><div><strong>Trap Mode:</strong> wrong options are intentionally plausible so the discussion sharpens positioning and differentiation.</div></div>
+          </div>
+          <div class="controls" style="margin-top:18px;">
+            <button class="primary" id="introStartHostBtn">Launch workshop host</button>
+            <button class="ghost" id="hideIntroBtn">Skip intro slide</button>
+          </div>
+        </div>
+        <div class="intro-right">
+          <div class="eyebrow">Suggested talk track</div>
+          <div class="agenda">
+            <div class="agenda-item"><div class="agenda-item-title">What attendees will do</div><div class="small">Scan the QR code, choose a username, answer every scenario, and watch the scoreboard update live.</div></div>
+            <div class="agenda-item"><div class="agenda-item-title">What the workshop delivers</div><div class="small">A faster path to positioning discussions across Microsoft 365 Copilot, Copilot Studio, Azure OpenAI, Azure Machine Learning, and Fabric.</div></div>
+            <div class="agenda-item"><div class="agenda-item-title">How to facilitate</div><div class="small">Ask “What would you use and why?”, reveal the answer, then explain why the other options are traps or adjacent choices.</div></div>
+            <div class="agenda-item"><div class="agenda-item-title">Recommended close</div><div class="small">Summarize chosen workloads, identify gaps, and move into next-step discovery or architecture conversations.</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="hostSection" class="hidden">
+      <div class="two-col">
+        <div class="panel">
+          <div class="panel-header">
+            <div><div class="section-title">Join the game</div><div class="small">Scan the QR code or open the join link on any phone</div></div>
+            <div><span class="status-dot" id="hostStatusDot"></span><span id="hostStatusText">Not connected</span></div>
+          </div>
+          <div class="panel-body join-grid">
+            <div><div id="qrcode"></div></div>
+            <div class="session-box">
+              <div class="session-card"><div class="small">Session ID</div><div class="session-id" id="sessionIdText">Generating…</div></div>
+              <div class="session-card"><div class="small">Join link</div><div id="joinLinkWrap" style="margin-top:6px;word-break:break-all;"></div><div class="notice" id="fileProtocolNotice">If this file is opened via file:// on a laptop, phones cannot open that local path. Upload it to a reachable internal web location first for real mobile joining.</div></div>
+              <div class="controls">
+                <button class="primary" id="startHostBtn">Initialize host</button>
+                <button class="ghost" id="copyJoinBtn">Copy join link</button>
+                <button class="secondary" id="shuffleBtn">Shuffle cards</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><div><div class="section-title">Leaderboard</div><div class="small">Live total across all rounds</div></div><div class="score-chip" id="playerCountChip">0 players</div></div>
+          <div class="panel-body" style="max-height:420px;overflow:auto;">
+            <table class="table"><thead><tr><th>#</th><th>Player</th><th>Status</th><th>Score</th></tr></thead><tbody id="scoreboardBody"><tr><td colspan="4" class="small">No players joined yet.</td></tr></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="panel">
+          <div class="panel-header">
+            <div><div class="section-title">Facilitator stage</div><div class="small">Project the question, let players answer on phones, then reveal and discuss</div></div>
+            <div class="controls"><button class="success" id="beginRoundBtn" disabled>Start round</button><button class="secondary" id="revealBtn" disabled>Reveal answer</button><button class="primary" id="nextBtn" disabled>Next card</button></div>
+          </div>
+          <div class="panel-body">
+            <div class="mode-badges"><div class="badge">Rapid Fire</div><div class="badge">Workshop prompt</div><div class="badge">Trap Mode</div></div>
+            <div class="question-meta"><div class="counter" id="cardCounter">Card 1 / 16</div><div class="timer-pill" id="timerPill">30s</div><div class="small" id="roundStateText">Initialize host to get started.</div></div>
+            <div class="timer-bar"><div class="timer-fill" id="timerFill"></div></div>
+            <div class="workshop-prompt">Workshop cue: Ask the room: “What would you use here, and why?” Then use the revealed answer to guide the discovery conversation.</div>
+            <div class="prompt" id="hostQuestion">Question will appear here.</div>
+            <div class="options-row" id="hostOptions"></div>
+            <div class="answer-panel hidden" id="hostAnswerPanel"><div class="answer-title">Recommended answer</div><div id="hostAnswerText"></div><div style="margin-top:10px;color:var(--ms-subtle);" id="hostWhyText"></div></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><div><div class="section-title">Facilitator notes</div><div class="small">Use this to steer the discussion after reveal</div></div></div>
+          <div class="panel-body">
+            <div class="grid-2">
+              <div class="session-card"><div class="small">Current correct option</div><div class="session-id" id="correctLetter" style="font-size:22px; letter-spacing:normal;">–</div></div>
+              <div class="session-card"><div class="small">Responses received</div><div class="session-id" id="responsesCount" style="font-size:22px; letter-spacing:normal;">0</div></div>
+            </div>
+            <div class="answer-panel" style="margin-top:18px;"><div class="answer-title">Run of show</div><ol style="padding-left:18px; line-height:1.7; margin:0;"><li>Display the QR code and let people join with a username.</li><li>Start the round and project the scenario.</li><li>Give the room 30 seconds to answer.</li><li>Reveal the answer, explain why the other options are traps, and move to the next card.</li></ol></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="joinSection" class="hidden player-view">
+      <div class="panel join-card" id="joinCard">
+        <div class="panel-header"><div><div class="section-title">Join the game</div><div class="small">Enter a username and connect to the session</div></div></div>
+        <div class="panel-body">
+          <div class="inline-form"><input id="usernameInput" maxlength="24" placeholder="Choose a username" /><button class="primary" id="joinGameBtn">Join</button></div>
+          <div style="margin-top:12px;" class="inline-form"><input id="sessionInput" placeholder="Session ID from QR or host" /><button class="secondary" id="autoFillBtn">Use URL session</button></div>
+          <div class="notice">This multiplayer version uses browser-based peer connectivity and needs internet access in the browser. For an enterprise-hardened rollout, connect the front end to an approved real-time service.</div>
+        </div>
+      </div>
+      <div class="panel hidden" id="playerGameCard">
+        <div class="panel-header"><div><div class="section-title">Player screen</div><div class="small" id="playerIdentityText">Waiting to connect…</div></div><div class="score-chip" id="playerOwnScore">Score 0</div></div>
+        <div class="panel-body">
+          <div class="question-meta"><div class="counter" id="playerCardCounter">Card 1 / 16</div><div class="timer-pill" id="playerTimerPill">30s</div><div class="small" id="playerRoundStateText">Waiting for host to start the round.</div></div>
+          <div class="timer-bar"><div class="timer-fill" id="playerTimerFill"></div></div>
+          <div class="workshop-prompt">Choose the product or platform you would use. Options appear side-by-side to make the decision fast and intuitive.</div>
+          <div class="prompt" id="playerQuestion">Waiting for next scenario…</div>
+          <div class="options-row" id="playerOptions"></div>
+          <div class="answer-panel hidden" id="playerAnswerPanel"><div class="answer-title">Round result</div><div id="playerRoundResult"></div><div style="margin-top:10px;color:var(--ms-subtle);" id="playerExplanation"></div></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+  <script>
+    const cards = [
+      { q:"I need help writing emails, summaries, and meeting notes.", opts:["Microsoft 365 Copilot","Copilot Studio","Azure Machine Learning"], correct:0, answer:"Microsoft 365 Copilot", why:"Best fit for productivity scenarios embedded in Teams, Outlook, Word, and other Microsoft 365 apps." },
+      { q:"Users want AI inside Teams and Outlook workflows without custom app development.", opts:["Microsoft 365 Copilot","Azure OpenAI","Microsoft Fabric"], correct:0, answer:"Microsoft 365 Copilot", why:"This is a native productivity scenario rather than a custom application build." },
+      { q:"I want to build a chatbot quickly with minimal coding.", opts:["Copilot Studio","Azure Machine Learning","Microsoft Fabric"], correct:0, answer:"Copilot Studio", why:"Low-code bot creation is the sweet spot for Copilot Studio." },
+      { q:"I need a business bot connected to workflows and enterprise systems.", opts:["Copilot Studio","Microsoft 365 Copilot","Azure Machine Learning"], correct:0, answer:"Copilot Studio", why:"Copilot Studio is designed for workflow-driven agents and business process orchestration." },
+      { q:"I want multi-step AI agents that take actions across systems.", opts:["Copilot Studio Agents","Power BI","Microsoft 365 Copilot"], correct:0, answer:"Copilot Studio Agents", why:"Agentic orchestration and action-taking workflows fit Copilot Studio agent scenarios." },
+      { q:"I need full control to build a custom AI-powered application with APIs.", opts:["Azure OpenAI","Copilot Studio","Microsoft Fabric"], correct:0, answer:"Azure OpenAI", why:"Custom applications with developer control, APIs, and integration patterns point to Azure OpenAI." },
+      { q:"I need to embed AI into a SaaS product with custom backend logic.", opts:["Azure OpenAI","Microsoft 365 Copilot","Power BI"], correct:0, answer:"Azure OpenAI", why:"A productized, code-first experience needs developer services, not end-user productivity tooling." },
+      { q:"I want to train, tune, and deploy my own machine learning models.", opts:["Azure Machine Learning","Copilot Studio","Microsoft 365 Copilot"], correct:0, answer:"Azure Machine Learning", why:"Model training and deployment are machine-learning platform requirements." },
+      { q:"I need experiment tracking, model tuning, and ML lifecycle management.", opts:["Azure Machine Learning","Microsoft Fabric","Copilot Studio"], correct:0, answer:"Azure Machine Learning", why:"MLOps and training lifecycle discipline fit Azure Machine Learning." },
+      { q:"I want insights and dashboards from large enterprise datasets.", opts:["Microsoft Fabric","Azure OpenAI","Copilot Studio"], correct:0, answer:"Microsoft Fabric", why:"This is a unified analytics and data-platform scenario, not primarily a chatbot or ML-training scenario." },
+      { q:"I need analytics with minimal engineering and strong business reporting.", opts:["Microsoft Fabric","Azure Machine Learning","Microsoft 365 Copilot"], correct:0, answer:"Microsoft Fabric", why:"Business analytics and reporting align best with Fabric." },
+      { q:"I need AI grounded on company knowledge using retrieval.", opts:["Azure OpenAI with retrieval","Power BI","Azure Machine Learning"], correct:0, answer:"Azure OpenAI with retrieval", why:"Retrieval-grounded responses are a custom app architecture pattern." },
+      { q:"Trap question: Can Copilot Studio replace full ML training?", opts:["Yes, always","No, use Azure Machine Learning","Use Power BI instead"], correct:1, answer:"No, use Azure Machine Learning", why:"Copilot Studio is for low-code agents and bots, not full model training and MLOps." },
+      { q:"Trap question: Can Microsoft 365 Copilot be your custom app platform?", opts:["Yes, for all app development","No, use Azure OpenAI for custom apps","Use Fabric only"], correct:1, answer:"No, use Azure OpenAI for custom apps", why:"Microsoft 365 Copilot is best for productivity scenarios, not as the primary custom app platform." },
+      { q:"Trap question: Fabric versus Azure Machine Learning?", opts:["They are identical","Fabric for analytics, Azure ML for model training","Use Copilot Studio for both"], correct:1, answer:"Fabric for analytics, Azure ML for model training", why:"The key split is analytics platform versus machine learning lifecycle." },
+      { q:"I need workflow automation plus AI actions, but I want a business-friendly build path.", opts:["Copilot Studio Agents","Azure Machine Learning","Power BI"], correct:0, answer:"Copilot Studio Agents", why:"That combination of workflow automation, actions, and business-friendly configuration points to Copilot Studio agents." }
+    ];
+
+    const state = { hostPeer:null, playerPeer:null, playerConn:null, conns:{}, players:{}, sessionId:"", joinUrl:"", hostInitDone:false, currentIndex:0, timeLeft:30, timer:null, roundOpen:false, revealed:false, playerName:"", playerConnected:false, playerScore:0, playerAnswered:false, playerSelected:null, currentQuestionAt:null, currentQuestionStart:null };
+    const el = id => document.getElementById(id);
+    const params = new URLSearchParams(location.search); const urlJoinId = params.get('join') || '';
+    function shuffleArray(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } }
+    function show(sectionId){ ['hostSection','joinSection'].forEach(id=>el(id).classList.add('hidden')); if(sectionId) el(sectionId).classList.remove('hidden'); window.scrollTo({top:0,behavior:'smooth'}); }
+    function setHostStatus(text, cls=''){ el('hostStatusText').textContent=text; el('hostStatusDot').className='status-dot '+cls; }
+    function escapeHtml(str){ return String(str).replace(/[&<>"']/g, s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s])); }
+    function serializePlayers(){ return Object.values(state.players).map(p=>({id:p.id,name:p.name,score:p.score,connected:p.connected})); }
+    function broadcast(msg){ Object.values(state.conns).forEach(c=>{ if(c&&c.open) c.send(msg); }); }
+    function sendToConn(conn,msg){ if(conn&&conn.open) conn.send(msg); }
+    function updateJoinArtifacts(){ const base=new URL(location.href); base.searchParams.set('join', state.sessionId); state.joinUrl=base.toString(); el('sessionIdText').textContent=state.sessionId||'Generating…'; el('joinLinkWrap').innerHTML = state.joinUrl ? `<a href="${state.joinUrl}" target="_blank" rel="noopener">${state.joinUrl}</a>` : '—'; const qr=el('qrcode'); qr.innerHTML=''; if(state.joinUrl && window.QRCode){ new QRCode(qr,{text:state.joinUrl,width:164,height:164,colorDark:'#242424',colorLight:'#ffffff'}); } else { qr.textContent='QR unavailable'; } el('fileProtocolNotice').style.display = location.protocol === 'file:' ? 'block' : 'none'; }
+    function renderScoreboard(){ const players=Object.values(state.players).sort((a,b)=>b.score-a.score||a.name.localeCompare(b.name)); el('playerCountChip').textContent=`${players.length} player${players.length===1?'':'s'}`; const body=el('scoreboardBody'); if(!players.length){ body.innerHTML='<tr><td colspan="4" class="small">No players joined yet.</td></tr>'; return; } body.innerHTML = players.map((p,i)=>`<tr><td class="rank">${i+1}</td><td>${escapeHtml(p.name)}</td><td>${p.connected?'Connected':'Offline'}</td><td><span class="score-chip">${p.score}</span></td></tr>`).join(''); }
+    function renderHostQuestion(){ const card=cards[state.currentIndex]; el('cardCounter').textContent=`Card ${state.currentIndex+1} / ${cards.length}`; el('timerPill').textContent=`${state.timeLeft}s`; el('hostQuestion').textContent=card.q; el('correctLetter').textContent=String.fromCharCode(65+card.correct)+' — '+card.answer; el('hostAnswerText').textContent=card.answer; el('hostWhyText').textContent=card.why; el('hostAnswerPanel').classList.toggle('hidden', !state.revealed); const wrap=el('hostOptions'); wrap.innerHTML=''; card.opts.forEach((opt,idx)=>{ const btn=document.createElement('button'); btn.className='option-btn'; if(state.revealed && idx===card.correct) btn.classList.add('correct'); btn.innerHTML=`<div class="letter">${String.fromCharCode(65+idx)}</div><div><div style="font-weight:700; margin-bottom:4px;">${opt}</div><div class="small">${idx===card.correct?'Recommended':'Trap option'}</div></div>`; wrap.appendChild(btn); }); const responseCount=Object.values(state.players).filter(p=>p.answerIndex!==null && p.lastQuestionAt===state.currentQuestionAt).length; el('responsesCount').textContent=String(responseCount); el('roundStateText').textContent=!state.hostInitDone ? 'Initialize host to get started.' : state.roundOpen ? 'Round live — players are answering now.' : state.revealed ? 'Answer revealed — discuss why the traps are wrong.' : 'Ready to start next round.'; }
+    function resetAnswersForRound(){ Object.values(state.players).forEach(p=>{ p.answerIndex=null; p.answerMs=null; p.lastQuestionAt=state.currentQuestionAt; }); renderHostQuestion(); renderScoreboard(); }
+    function updateTimerUI(){ const pct=Math.max(0,(state.timeLeft/30)*100); el('timerPill').textContent=`${state.timeLeft}s`; el('timerFill').style.width=pct+'%'; broadcast({type:'timerSync', timeLeft:state.timeLeft, questionAt:state.currentQuestionAt}); }
+    function startTimer(){ clearInterval(state.timer); state.timeLeft=30; state.currentQuestionAt=Date.now(); state.currentQuestionStart=state.currentQuestionAt; updateTimerUI(); resetAnswersForRound(); state.timer=setInterval(()=>{ state.timeLeft-=1; updateTimerUI(); if(state.timeLeft<=0){ clearInterval(state.timer); state.roundOpen=false; broadcast({type:'roundClosed'}); el('roundStateText').textContent='Time is up — reveal the answer and discuss.'; } },1000); }
+    function startRound(){ state.roundOpen=true; state.revealed=false; el('revealBtn').disabled=false; const card=cards[state.currentIndex]; broadcast({type:'question', index:state.currentIndex, total:cards.length, q:card.q, opts:card.opts, questionAt:Date.now(), timeLimit:30}); startTimer(); renderHostQuestion(); }
+    function revealAnswer(){ state.revealed=true; state.roundOpen=false; clearInterval(state.timer); const card=cards[state.currentIndex]; Object.values(state.players).forEach(p=>{ if(p.lastQuestionAt!==state.currentQuestionAt) return; if(p.answerIndex===card.correct){ const speedBonus=Math.max(10,100-Math.floor((p.answerMs||0)/350)); if(!p.awardedForQuestionAt||p.awardedForQuestionAt!==state.currentQuestionAt){ p.score+=speedBonus; p.awardedForQuestionAt=state.currentQuestionAt; } } sendToConn(state.conns[p.id], {type:'reveal', correct:card.correct, answer:card.answer, why:card.why, score:p.score, questionAt:state.currentQuestionAt}); }); renderScoreboard(); renderHostQuestion(); broadcast({type:'scoreboard', players:serializePlayers()}); el('nextBtn').disabled=false; }
+    function nextCard(){ clearInterval(state.timer); state.currentIndex=(state.currentIndex+1)%cards.length; state.revealed=false; state.roundOpen=false; el('nextBtn').disabled=true; el('revealBtn').disabled=true; renderHostQuestion(); broadcast({type:'prepareNext', index:state.currentIndex, total:cards.length}); }
+    function markDisconnected(peerId){ if(state.players[peerId]){ state.players[peerId].connected=false; renderScoreboard(); broadcast({type:'scoreboard', players:serializePlayers()}); } }
+    function handleHostData(conn,msg){ if(!msg||!msg.type) return; if(msg.type==='join'){ state.players[conn.peer]={ id:conn.peer, name:String(msg.name||'Player').slice(0,24), score:state.players[conn.peer]?.score||0, connected:true, answerIndex:null, answerMs:null, lastQuestionAt:null, awardedForQuestionAt:null }; sendToConn(conn,{type:'joined', playerId:conn.peer, name:state.players[conn.peer].name, score:state.players[conn.peer].score}); renderScoreboard(); broadcast({type:'scoreboard', players:serializePlayers()}); if(!el('beginRoundBtn').disabled){ sendToConn(conn,{type:'prepareNext', index:state.currentIndex, total:cards.length}); } }
+      if(msg.type==='answer'){ const p=state.players[conn.peer]; if(!p || !state.roundOpen) return; if(p.lastQuestionAt===msg.questionAt && p.answerIndex!==null) return; p.answerIndex=Number(msg.answerIndex); p.answerMs=Number(msg.answerMs||0); p.lastQuestionAt=Number(msg.questionAt); renderHostQuestion(); broadcast({type:'scoreboard', players:serializePlayers()}); } }
+    function initHost(){ if(state.hostInitDone) return; show('hostSection'); setHostStatus('Connecting host…','warn'); state.hostPeer=new Peer(); state.hostPeer.on('open',id=>{ state.sessionId=id; state.hostInitDone=true; updateJoinArtifacts(); setHostStatus('Host live','live'); el('beginRoundBtn').disabled=false; el('nextBtn').disabled=true; el('revealBtn').disabled=true; renderHostQuestion(); }); state.hostPeer.on('connection',conn=>{ state.conns[conn.peer]=conn; conn.on('open',()=>sendToConn(conn,{type:'welcome', sessionId:state.sessionId, cards:cards.length})); conn.on('data',msg=>handleHostData(conn,msg)); conn.on('close',()=>markDisconnected(conn.peer)); conn.on('error',()=>markDisconnected(conn.peer)); }); state.hostPeer.on('error',err=>{ setHostStatus('Host error — see browser console','warn'); console.error(err); }); }
+    function initPlayerJoin(){ const sessionId=(el('sessionInput').value||'').trim(); const username=(el('usernameInput').value||'').trim()||'Player'; if(!sessionId){ alert('Enter a session ID or open the page from a QR code with a session in the URL.'); return; } state.playerName=username.slice(0,24); state.playerPeer=new Peer(); state.playerPeer.on('open',()=>{ const conn=state.playerPeer.connect(sessionId,{reliable:true}); state.playerConn=conn; conn.on('open',()=>{ state.playerConnected=true; conn.send({type:'join', name:state.playerName}); el('joinCard').classList.add('hidden'); el('playerGameCard').classList.remove('hidden'); el('playerIdentityText').textContent=`${state.playerName} • Connected to session ${sessionId}`; }); conn.on('data',handlePlayerData); conn.on('close',()=>{ state.playerConnected=false; el('playerRoundStateText').textContent='Connection closed.'; }); }); state.playerPeer.on('error',err=>{ console.error(err); alert('Unable to connect. Verify the session ID and make sure the browser has internet access.'); }); }
+    function renderPlayerQuestion(q,opts,index,total){ el('playerCardCounter').textContent=`Card ${index+1} / ${total}`; el('playerQuestion').textContent=q; const wrap=el('playerOptions'); wrap.innerHTML=''; state.playerSelected=null; state.playerAnswered=false; el('playerAnswerPanel').classList.add('hidden'); opts.forEach((opt,idx)=>{ const btn=document.createElement('button'); btn.className='option-btn'; btn.innerHTML=`<div class="letter">${String.fromCharCode(65+idx)}</div><div><div style="font-weight:700; margin-bottom:4px;">${opt}</div><div class="small">Tap to answer</div></div>`; btn.onclick=()=>submitPlayerAnswer(idx); wrap.appendChild(btn); }); }
+    function submitPlayerAnswer(idx){ if(!state.playerConnected||state.playerAnswered||!state.playerConn?.open) return; state.playerAnswered=true; state.playerSelected=idx; const elapsed=Date.now()-state.currentQuestionStart; state.playerConn.send({type:'answer', answerIndex:idx, answerMs:elapsed, questionAt:state.currentQuestionAt}); [...el('playerOptions').children].forEach((btn,i)=>{ btn.classList.toggle('selected', i===idx); btn.disabled=true; }); el('playerRoundStateText').textContent='Answer submitted — waiting for reveal.'; }
+    let playerTimer=null; function stopPlayerTimer(){ clearInterval(playerTimer); } function updatePlayerTimer(){ el('playerTimerPill').textContent=`${Math.max(0,state.timeLeft)}s`; el('playerTimerFill').style.width=Math.max(0,(state.timeLeft/30)*100)+'%'; } function startPlayerTimer(){ stopPlayerTimer(); playerTimer=setInterval(()=>{ state.timeLeft-=1; updatePlayerTimer(); if(state.timeLeft<=0) stopPlayerTimer(); },1000); }
+    function handlePlayerData(msg){ if(!msg||!msg.type) return; if(msg.type==='welcome'){ if(!el('sessionInput').value) el('sessionInput').value=msg.sessionId; } if(msg.type==='joined'){ state.playerScore=msg.score||0; el('playerOwnScore').textContent=`Score ${state.playerScore}`; } if(msg.type==='prepareNext'){ el('playerRoundStateText').textContent='Next card is ready. Waiting for host to start the round.'; el('playerCardCounter').textContent=`Card ${msg.index+1} / ${msg.total}`; el('playerQuestion').textContent='Waiting for next scenario…'; el('playerOptions').innerHTML=''; el('playerAnswerPanel').classList.add('hidden'); } if(msg.type==='question'){ state.currentQuestionAt=msg.questionAt; state.currentQuestionStart=msg.questionAt; state.timeLeft=msg.timeLimit||30; updatePlayerTimer(); renderPlayerQuestion(msg.q,msg.opts,msg.index,msg.total); el('playerRoundStateText').textContent='Round live — choose your answer.'; startPlayerTimer(); } if(msg.type==='timerSync'){ state.timeLeft=msg.timeLeft; state.currentQuestionAt=msg.questionAt; updatePlayerTimer(); } if(msg.type==='roundClosed'){ el('playerRoundStateText').textContent='Time is up — waiting for reveal.'; stopPlayerTimer(); [...el('playerOptions').children].forEach(btn=>btn.disabled=true); } if(msg.type==='reveal'){ stopPlayerTimer(); state.playerScore=msg.score||state.playerScore; el('playerOwnScore').textContent=`Score ${state.playerScore}`; const selected=state.playerSelected; [...el('playerOptions').children].forEach((btn,i)=>{ btn.classList.toggle('correct', i===msg.correct); if(selected!==null && i===selected && i!==msg.correct) btn.classList.add('wrong'); btn.disabled=true; }); el('playerAnswerPanel').classList.remove('hidden'); el('playerRoundResult').textContent = selected===msg.correct ? `Correct! ${msg.answer}` : `Correct answer: ${msg.answer}`; el('playerExplanation').textContent=msg.why; el('playerRoundStateText').textContent='Answer revealed — wait for the next card.'; } if(msg.type==='scoreboard'){ const me=(msg.players||[]).find(p=>p.name===state.playerName); if(me){ state.playerScore=me.score; el('playerOwnScore').textContent=`Score ${state.playerScore}`; } } }
+
+    el('chooseHostBtn').onclick=()=>show('hostSection');
+    el('chooseJoinBtn').onclick=()=>show('joinSection');
+    el('introStartHostBtn').onclick=()=>{ el('introSlide').classList.add('hidden'); initHost(); };
+    el('hideIntroBtn').onclick=()=>el('introSlide').classList.add('hidden');
+    el('startHostBtn').onclick=initHost; el('beginRoundBtn').onclick=startRound; el('revealBtn').onclick=revealAnswer; el('nextBtn').onclick=nextCard; el('shuffleBtn').onclick=()=>{ shuffleArray(cards); state.currentIndex=0; renderHostQuestion(); };
+    el('copyJoinBtn').onclick=async()=>{ if(!state.joinUrl) return; try{ await navigator.clipboard.writeText(state.joinUrl); el('copyJoinBtn').textContent='Copied'; setTimeout(()=>el('copyJoinBtn').textContent='Copy join link',1400);}catch{ alert('Copy failed. You can manually copy the join link shown on screen.'); } };
+    el('joinGameBtn').onclick=initPlayerJoin; el('autoFillBtn').onclick=()=>{ if(urlJoinId) el('sessionInput').value=urlJoinId; };
+    if(urlJoinId){ show('joinSection'); el('sessionInput').value=urlJoinId; }
+    renderHostQuestion(); renderScoreboard();
+  </script>
+</body>
+</html>
